@@ -63,11 +63,11 @@ func (r *wlanResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Required:            true,
 			},
 			"security": schema.StringAttribute{
-				MarkdownDescription: "One of `open` or `wpa-p` (WPA2 personal, needs passphrase).",
+				MarkdownDescription: "One of `open`, `wpa-p` (WPA2 personal), `wpa3-p` (WPA3 personal/SAE), or `wpa2-wpa3` (WPA2/WPA3 transition). All but `open` need a passphrase.",
 				Required:            true,
 			},
 			"passphrase": schema.StringAttribute{
-				MarkdownDescription: "Pre-shared key for `wpa-p`. Required to be nonempty and >= 8 chars " +
+				MarkdownDescription: "Pre-shared key for `wpa-p`, `wpa3-p`, and `wpa2-wpa3`. Required to be nonempty and >= 8 chars " +
 					"when security != `open`; ignored otherwise. Shown as `(sensitive value)` in plan diffs.",
 				Optional:  true,
 				Sensitive: true,
@@ -270,11 +270,11 @@ func (r *wlanResource) validateWlan(m *wlanModel, d *diag.Diagnostics) bool {
 	}
 	sec := m.Security.ValueString()
 	switch sec {
-	case "open", "wpa-p":
+	case "open", "wpa-p", "wpa3-p", "wpa2-wpa3":
 	default:
 		d.AddAttributeError(path.Root("security"),
 			"Invalid security value",
-			fmt.Sprintf("security must be one of open|wpa-p, got %q", sec))
+			fmt.Sprintf("security must be one of open|wpa-p|wpa3-p|wpa2-wpa3, got %q", sec))
 		return false
 	}
 	name := m.Name.ValueString()

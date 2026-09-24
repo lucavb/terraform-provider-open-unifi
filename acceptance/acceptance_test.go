@@ -365,6 +365,14 @@ resource "open-unifi_wlan" "guest" {
   security = "open"
   vlan     = 1
 }
+
+resource "open-unifi_wlan" "wpa3" {
+  name       = "wpa3"
+  ssid       = "Wpa3Net"
+  security   = "wpa3-p"
+  passphrase = "correct-horse-battery-3"
+  vlan       = 1
+}
 `, providerAddress, url))
 }
 func writeConfigUpdated(t *testing.T, dir, url string) {

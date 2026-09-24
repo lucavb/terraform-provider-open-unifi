@@ -60,6 +60,17 @@ resource "open-unifi_wlan" "main" {
   enabled    = true
 }
 
+# --- WPA3 wlan (SAE-only; wpa2-wpa3 transition also supported) -------------
+resource "open-unifi_wlan" "wpa3" {
+  device_mac = open-unifi_device.attic.mac
+  name       = "wpa3"
+  ssid       = "ExampleNet-WPA3"
+  security   = "wpa3-p" # or "wpa2-wpa3" for the mixed-mode transition
+  passphrase = "correct-horse-battery-3" # same min-8 rule as wpa-p
+  vlan       = 42
+  enabled    = true
+}
+
 # --- One open wlan (guest) -------------------------------------------------
 resource "open-unifi_wlan" "guest" {
   device_mac = open-unifi_device.attic.mac
